@@ -1,5 +1,6 @@
 import sys
 import os
+from scanner import scan_folder, print_files
 
 
 def main():
@@ -14,6 +15,9 @@ def main():
         sys.exit(1)
 
     print(f"Индексатор запущен. Папка: {folder_path}")
+
+    files = scan_folder(folder_path)
+    print_files(files)
 
 
 if __name__ == "__main__":
