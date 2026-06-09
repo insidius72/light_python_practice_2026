@@ -5,25 +5,32 @@ import datetime
 def scan_folder(folder_path):
     files = []
 
-    for root, dirs, filenames in os.walk(folder_path):
-        for filename in filenames:
-            full_path = os.path.join(root, filename)
+    def recurse(current_path):
+        try:
+            entries = os.listdir(current_path)
+        except OSError:
+            return
 
-            try:
-                stat = os.stat(full_path)
-                size = stat.st_size
-                modified = datetime.datetime.fromtimestamp(stat.st_mtime)
-                modified_str = modified.strftime("%Y-%m-%d %H:%M:%S")
-            except OSError:
-                size = -1
-                modified_str = "недоступно"
+        for entry in entries:
+            full_path = os.path.join(current_path, entry)
+            if os.path.isdir(full_path):
+                recurse(full_path)
+            elif os.path.isfile(full_path):
+                try:
+                    stat = os.stat(full_path)
+                    size = stat.st_size
+                    modified = datetime.datetime.fromtimestamp(stat.st_mtime)
+                    modified_str = modified.strftime("%Y-%m-%d %H:%M:%S")
+                except OSError:
+                    size = -1
+                    modified_str = "недоступно"
+                files.append({
+                    "path": full_path,
+                    "size": size,
+                    "modified": modified_str,
+                })
 
-            files.append({
-                "path": full_path,
-                "size": size,
-                "modified": modified_str,
-            })
-
+    recurse(folder_path)
     return files
 
 
