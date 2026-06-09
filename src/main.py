@@ -1,7 +1,7 @@
 import sys
 import os
 from scanner import scan_folder, print_files
-
+from duplicates import find_duplicates, print_duplicates
 
 def main():
     if len(sys.argv) < 2:
@@ -19,6 +19,9 @@ def main():
     files = scan_folder(folder_path)
     print_files(files)
 
+    print("\n--- Поиск дубликатов ---")
+    duplicates = find_duplicates(files)
+    print_duplicates(duplicates)
 
 if __name__ == "__main__":
     main()
